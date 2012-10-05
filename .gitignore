@@ -1,0 +1,13 @@
+/build
+src/*/obj
+src/*/bin
+src/*AssemblyInfo.cs
+*.csproj.user
+*ReSharper.user
+_ReSharper*
+*.ReSharper
+*.suo
+*.cache
+* Thumbs.db
+*.nupkg
+packages/
