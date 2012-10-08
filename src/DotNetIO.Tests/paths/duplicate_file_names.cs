@@ -33,17 +33,19 @@ namespace DotNetIO.Tests
 		{
 			var wanted = "abc";
 			var otherForSix = "123456789abcdefghijklmnopqrstuvwxyz".ToCharArray().Select(c => wanted + "_" + c);
-			var otherForFive = "123456789abcdefghijklmnopqrstuvwxyz".ToCharArray().Select(c => "ab" + "_" + c);
-			var otherForFour = "123456789abcdefghijklmnopqrstuvwxyz".ToCharArray().Select(c => "a" + "_" + c);
+			var otherForFive = "123456789abcdefghijklmnopqrstuvwxyz".ToCharArray().Select(c => "abc" + "_" + c);
+			var otherForFour = "123456789abcdefghijklmnopqrstuvwxyz".ToCharArray().Select(c => "ab" + "_" + c);
 
+			var path = wanted.ToPath();
 			Assert.That(
-				wanted.ToPath().NextName(new HashSet<string>(otherForSix.Concat(new[]{"abc"})), 6u).FullPath,
+				path.NextName(new HashSet<string>(otherForSix.Concat(new[]{"abc"})), 6u).FullPath,
 				Is.EqualTo("abc_10"));
+			var others = otherForFive.Concat(new[] {"abc"});
 			Assert.That(
-				wanted.ToPath().NextName(new HashSet<string>(otherForFive.Concat(new[]{"abc"})), 5u).FullPath,
+				path.NextName(new HashSet<string>(others), 5u).FullPath,
 				Is.EqualTo("ab_10"));
 			Assert.That(
-				wanted.ToPath().NextName(new HashSet<string>(otherForFour.Concat(new[]{"abc"})), 4u).FullPath,
+				path.NextName(new HashSet<string>(otherForFour.Concat(new[]{"abc"})), 4u).FullPath,
 				Is.EqualTo("a_10"));
 		}
 
