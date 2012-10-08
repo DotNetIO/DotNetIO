@@ -106,6 +106,7 @@
     <Compile Include="File.cs" />
     <Compile Include="FileSystem.cs" />
     <Compile Include="FileSystemItem.cs" />
+    <Compile Include="Internal\DebuggerHelper.cs" />
     <Compile Include="MapPath.cs" />
     <Compile Include="Internal\EnumerableExtensions.cs" />
     <Compile Include="Internal\LongPathCommon.cs" />

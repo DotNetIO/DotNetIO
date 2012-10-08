@@ -73,7 +73,7 @@ namespace DotNetIO
 
 				var middle = _segments.Skip(1).Take(Math.Max(0, _segments.Count - 2));
 
-				return string.Join(sep, new[] {_pathInfo.Drive}.Concat(middle).ToArray());
+				return string.Join(sep, new[] { _pathInfo.DriveLetter + ":" }.Concat(middle).ToArray());
 			}
 		}
 

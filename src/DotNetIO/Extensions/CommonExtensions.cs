@@ -23,13 +23,13 @@ namespace DotNetIO
 	/// </summary>
 	public static class CommonExtensions
 	{
-		public static T MustExist<T>(this T directory)
+		public static T MustExist<T>(this T fileSystemItem)
 			where T : FileSystemItem<T>
 		{
-			if (!directory.Exists())
-				directory.Create();
+			if (!fileSystemItem.Exists())
+				fileSystemItem.Create();
 
-			return directory;
+			return fileSystemItem;
 		}
 
 		/// <summary>

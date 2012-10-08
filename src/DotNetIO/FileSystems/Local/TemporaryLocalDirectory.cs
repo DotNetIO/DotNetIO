@@ -38,12 +38,12 @@ namespace DotNetIO.FileSystems.Local
 			GC.SuppressFinalize(this);
 		}
 
-		public Directory UnderlyingDirectory { get; set; }
-
 		protected virtual void Dispose(bool disposing)
 		{
 			Delete();
 		}
+
+		public Directory UnderlyingDirectory { get; set; }
 
 		public Directory Create()
 		{
