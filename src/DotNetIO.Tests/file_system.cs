@@ -202,7 +202,7 @@ namespace DotNetIO.Tests
 		[Test]
 		public void file_paths_are_normalized()
 		{
-			var file = FileSystem.GetFile(@"C:\\folder\\file");
+			var file = FileSystem.GetFile(@"C:\folder\file");
 			file.Path.ShouldBe(new Path(@"C:\folder\file"));
 		}
 
