@@ -83,7 +83,7 @@ namespace DotNetIO.FileSystems.InMemory
 
 		public File GetFile(string filePath)
 		{
-			return GetFile(filePath);
+			return GetFile(filePath.ToPath());
 		}
 
 		public File GetFile(Path filePath)
