@@ -44,7 +44,7 @@ namespace DotNetIO
 		/// there aren't enough characters in the name space allowed by the limit.</exception>
 		/// <returns></returns>
 		[Pure]
-		public static Path NextName(this Path wanted, HashSet<string> existing, uint nameLimit)
+		public static Path NextName(this Path wanted, HashSet<string> existing, uint nameLimit = 255u)
 		{
 			Contract.Requires(wanted != null);
 			Contract.Requires(existing != null);

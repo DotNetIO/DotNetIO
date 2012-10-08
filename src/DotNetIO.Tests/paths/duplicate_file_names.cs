@@ -49,6 +49,18 @@ namespace DotNetIO.Tests
 				Is.EqualTo("a_10"));
 		}
 
+		[Test]
+		public void count_over_36_with_ext()
+		{
+			var wanted = "abc.e";
+			var otherForFive = "123456789abcdefghijklmnopqrstuvwxyz".ToCharArray().Select(c => "a" + "_" + c + ".e");
+			var others = otherForFive.Concat(new[] { "abc.e" });
+			var path = wanted.ToPath();
+			Assert.That(
+				path.NextName(new HashSet<string>(others), 5u).FullPath,
+				Is.EqualTo("_10.e"));
+		}
+
 		[Test, TestCase("a", new[] { "a" }, 2u)]
 		public void out_of_names_exception(string wanted, string[] existing, uint nameLimit)
 		{
