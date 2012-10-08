@@ -110,9 +110,7 @@ namespace DotNetIO.Internal
 		/// </exception>
 		public static void Delete(Path path)
 		{
-			var normalizedPath = LongPathCommon.NormalizeLongPath(path.FullPath);
-
-			if (!NativeMethods.DeleteFile(normalizedPath))
+			if (!NativeMethods.DeleteFile(path.LongFullPath))
 				throw LongPathCommon.GetExceptionFromLastWin32Error();
 		}
 
@@ -252,10 +250,10 @@ namespace DotNetIO.Internal
 		/// 	<paramref name = "sourcePath" /> and/or <paramref name = "destinationPath" /> specifies 
 		/// 	a device that is not ready.
 		/// </exception>
-		public static void Copy(string sourcePath, string destinationPath, bool overwrite)
+		public static void Copy(Path sourcePath, Path destinationPath, bool overwrite)
 		{
-			var normalizedSourcePath = LongPathCommon.NormalizeLongPath(sourcePath, "sourcePath");
-			var normalizedDestinationPath = LongPathCommon.NormalizeLongPath(destinationPath, "destinationPath");
+			var normalizedSourcePath = LongPathCommon.NormalizeLongPath(sourcePath.FullPath, "sourcePath");
+			var normalizedDestinationPath = LongPathCommon.NormalizeLongPath(destinationPath.FullPath, "destinationPath");
 
 			if (!NativeMethods.CopyFile(normalizedSourcePath, normalizedDestinationPath, !overwrite))
 				throw LongPathCommon.GetExceptionFromLastWin32Error();
@@ -409,14 +407,12 @@ namespace DotNetIO.Internal
 			int bufferSize,
 			FileOptions options)
 		{
-			const int DefaultBufferSize = 1024;
+			const int defaultBufferSize = 1024;
 
 			if (bufferSize == 0)
-				bufferSize = DefaultBufferSize;
+				bufferSize = defaultBufferSize;
 
-			var normalizedPath = LongPathCommon.NormalizeLongPath(path.FullPath);
-
-			var handle = GetFileHandle(normalizedPath, mode, access, share, options);
+			var handle = GetFileHandle(path.LongFullPath, mode, access, share, options);
 
 			var fileStream = new FileStream(handle, access, bufferSize,
 			                                (options & FileOptions.Asynchronous) == FileOptions.Asynchronous);
@@ -430,8 +426,7 @@ namespace DotNetIO.Internal
 		internal static SafeFileHandle GetFileHandle(Path path, FileMode mode, FileAccess access, FileShare share,
 		                                            FileOptions options)
 		{
-			var normalizedPath = LongPathCommon.NormalizeLongPath(path.FullPath);
-			return GetFileHandle(normalizedPath, mode, access, share, options);
+			return GetFileHandle(path.LongFullPath, mode, access, share, options);
 		}
 
 		private static SafeFileHandle GetFileHandle(string normalizedPath, FileMode mode, FileAccess access, FileShare share,

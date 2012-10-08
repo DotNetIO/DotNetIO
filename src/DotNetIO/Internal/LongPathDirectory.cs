@@ -1,6 +1,4 @@
-﻿#region license
-
-// Copyright 2004-2012 Henrik Feldt - https://github.com/DotNetIO
+﻿// Copyright 2004-2012 Henrik Feldt - https://github.com/DotNetIO
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,8 +11,6 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
-#endregion
 
 using System;
 using System.Collections.Generic;
@@ -77,9 +73,7 @@ namespace DotNetIO.Internal
 		/// </remarks>
 		public static void Create(Path path)
 		{
-			var normalizedPath = LongPathCommon.NormalizeLongPath(path.FullPath);
-
-			if (!NativeMethods.CreateDirectory(normalizedPath, IntPtr.Zero))
+			if (!NativeMethods.CreateDirectory(path.LongFullPath, IntPtr.Zero))
 			{
 				// To mimic Directory.CreateDirectory, we don't throw if the directory (not a file) already exists
 				var errorCode = Marshal.GetLastWin32Error();
@@ -140,9 +134,7 @@ namespace DotNetIO.Internal
 		/// </exception>
 		public static void Delete(Path path)
 		{
-			var normalizedPath = LongPathCommon.NormalizeLongPath(path.FullPath);
-
-			if (!NativeMethods.RemoveDirectory(normalizedPath))
+			if (!NativeMethods.RemoveDirectory(path.LongFullPath))
 				throw LongPathCommon.GetExceptionFromLastWin32Error();
 		}
 

@@ -51,14 +51,12 @@ namespace DotNetIO.FileSystems.Local.Win32
 
 		public override DateTimeOffset? GetLastModifiedTimeUtc()
 		{
-			var normalizedPath = LongPathCommon.NormalizeLongPath(Path.FullPath);
-
 			if (!Exists())
 				return null;
 
 			WIN32_FILE_ATTRIBUTE_DATA data;
 			if (!NativeMethods.GetFileAttributesEx(
-				normalizedPath,
+				Path.LongFullPath,
 				GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard,
 				out data))
 				throw LongPathCommon.GetExceptionFromLastWin32Error();
@@ -83,7 +81,7 @@ namespace DotNetIO.FileSystems.Local.Win32
 		public override void CopyTo(FileSystemItem item)
 		{
 			var destinationPath = PrepareCopyTo(item);
-			LongPathFile.Copy(Path.FullPath, destinationPath, true);
+			LongPathFile.Copy(Path, destinationPath, true);
 		}
 
 		public override FileSystemItem MoveTo(FileSystemItem item)

@@ -346,7 +346,7 @@ namespace DotNetIO.FileSystems.Local.Win32.Interop
 		/// <returns>The target of the junction point</returns>
 		/// <exception cref = "IOException">Thrown when the specified path does not
 		/// 	exist, is invalid, is not a junction point, or some other error occurs</exception>
-		public static string GetTarget(Path junctionPoint)
+		public static Path GetTarget(Path junctionPoint)
 		{
 			using (var handle = OpenReparsePoint(junctionPoint, EFileAccess.GenericRead))
 			{
@@ -354,7 +354,7 @@ namespace DotNetIO.FileSystems.Local.Win32.Interop
 				if (target == null)
 					throw new IOException("Path is not a junction point.");
 
-				return target;
+				return target.ToPath();
 			}
 		}
 
@@ -401,9 +401,7 @@ namespace DotNetIO.FileSystems.Local.Win32.Interop
 
 		private static SafeFileHandle OpenReparsePoint(Path reparsePoint, EFileAccess accessMode)
 		{
-			var normalizedPath = LongPathCommon.NormalizeLongPath(reparsePoint.FullPath);
-
-			var reparsePointHandle = new SafeFileHandle(CreateFile(normalizedPath, accessMode,
+			var reparsePointHandle = new SafeFileHandle(CreateFile(reparsePoint.LongFullPath, accessMode,
 			                                                       EFileShare.Read | EFileShare.Write | EFileShare.Delete,
 			                                                       IntPtr.Zero, ECreationDisposition.OpenExisting,
 			                                                       EFileAttributes.BackupSemantics |

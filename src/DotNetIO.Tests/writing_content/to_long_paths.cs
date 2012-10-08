@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Text;
 using DotNetIO.Tests.TestClasses;
 using NUnit.Framework;
 using SharpTestsEx;
@@ -35,7 +37,8 @@ namespace DotNetIO.Tests.writing_content
 			_temporaryDirectory.Should().Not.Be.Null();
 
 			// given
-			_dir = _temporaryDirectory.GetDirectory(new string('a', 255));
+			_directoryName = RandomName(255);
+			_dir = _temporaryDirectory.GetDirectory(_directoryName);
 			_dir.Should().Not.Be.Null();
 			_dir.MustExist();
 		}
@@ -43,7 +46,7 @@ namespace DotNetIO.Tests.writing_content
 		[Test]
 		public void the_dir_name_should_equal()
 		{
-			_temporaryDirectory.Path.Combine(new string('a', 255))
+			_temporaryDirectory.Path.Combine(_directoryName)
 				.FullPath
 				.ShouldBe(_dir.Path.FullPath);
 		}
@@ -68,6 +71,18 @@ namespace DotNetIO.Tests.writing_content
 		public void teardown()
 		{
 			_temporaryDirectory.Dispose();
+		}
+
+		static Random _r = new Random();
+		string _directoryName;
+
+		static string RandomName(uint len)
+		{
+			var sb = new StringBuilder();
+			var choices = "abcdef ".ToCharArray();
+			for (int i = 0; i < len; i++)
+				sb.Append(choices[_r.Next(choices.Length)]);
+			return sb.ToString();
 		}
 	}
 }

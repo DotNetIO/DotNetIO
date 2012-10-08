@@ -1,5 +1,3 @@
-#region license
-
 // Copyright 2004-2012 Henrik Feldt - https://github.com/DotNetIO
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,8 +11,6 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
-#endregion
 
 using System;
 using System.Collections.Generic;
@@ -42,7 +38,7 @@ namespace DotNetIO
 	{
 		// can of worms shut!
 
-		// TODO: v3.2: 2001:0db8::1428:57ab and 2001:0db8:0:0::1428:57ab are not matched!
+		// TODO: 2001:0db8::1428:57ab and 2001:0db8:0:0::1428:57ab are not matched!
 		// ip6: thanks to http://blogs.msdn.com/mpoulson/archive/2005/01/10/350037.aspx
 
 		private static readonly List<char> _invalidChars = new List<char>(GetInvalidPathChars());
@@ -153,7 +149,7 @@ namespace DotNetIO
 		///	Gets the full path for a given path.
 		///</summary>
 		///<param name = "path"></param>
-		///<returns>The full path string</returns>
+		///<returns>The full path string that is valid to use as a long path</returns>
 		///<exception cref = "ArgumentNullException">if path is null</exception>
 		[Pure]
 		public static string GetFullPath(string path)
@@ -202,7 +198,7 @@ namespace DotNetIO
 		[Pure]
 		public static string GetFileName(string path)
 		{
-			Contract.Requires(!string.IsNullOrEmpty(path), "path musn't be null");
+			Contract.Requires(!string.IsNullOrEmpty(path), "path musn't be null or empty");
 
 			if (path.EndsWith("/") || path.EndsWith("\\"))
 				return string.Empty;
@@ -218,10 +214,11 @@ namespace DotNetIO
 			return nonRoot;
 		}
 
-
 		[Pure]
 		public static string GetDirectoryName(string path)
 		{
+			Contract.Requires(!string.IsNullOrEmpty(path));
+
 			return GetFileName(path);
 		}
 
@@ -233,6 +230,11 @@ namespace DotNetIO
 			return GetFileName(path).Length != GetFileNameWithoutExtension(path).Length;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="path"></param>
+		/// <returns>empty if no extension</returns>
 		[Pure]
 		public static string GetExtension(string path)
 		{
@@ -290,16 +292,24 @@ namespace DotNetIO
 			return new[] {DirectorySeparatorChar, AltDirectorySeparatorChar};
 		}
 
+		/// <summary>
+		/// Returns the path of the current system's temporary folder.
+		/// </summary>
+		/// <returns>The full path of a temporary directory.</returns>
 		[Pure]
 		public static Path GetTempPath()
 		{
-			return new Path(System.IO.Path.GetTempPath());
+			return System.IO.Path.GetTempPath().ToPath();
 		}
 
+		/// <summary>
+		/// Creates a uniquely named, zero-byte temporary file on disk and returns the full path of that file.
+		/// </summary>
+		/// <returns>The full path of the temporary file.</returns>
 		[Pure]
-		public static string GetTempFileName()
+		public static Path GetTempFileName()
 		{
-			return System.IO.Path.GetTempFileName();
+			return System.IO.Path.GetTempFileName().ToPath();
 		}
 	}
 }

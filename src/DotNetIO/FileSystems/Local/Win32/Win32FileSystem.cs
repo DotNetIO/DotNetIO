@@ -44,7 +44,7 @@ namespace DotNetIO.FileSystems.Local.Win32
 
 		public override Directory GetTempDirectory()
 		{
-			return new Win32Directory(Path.GetTempPath().FullPath);
+			return new Win32Directory(Path.GetTempPath());
 		}
 	}
 }

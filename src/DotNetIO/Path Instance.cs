@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
+using DotNetIO.Internal;
 
 namespace DotNetIO
 {
@@ -90,9 +91,21 @@ namespace DotNetIO
 				.ToList();
 		}
 
+		/// <summary>
+		/// Gets the full path of this path. This is the original path
+		/// passed when creating the <see cref="Path"/> instance.
+		/// </summary>
 		public string FullPath
 		{
 			get { return _originalPath; }
+		}
+
+		/// <summary>
+		/// Gets the full path with a prefix.
+		/// </summary>
+		internal string LongFullPath
+		{
+			get { return LongPathCommon.NormalizeLongPath(_originalPath); }
 		}
 
 		public IEnumerable<string> Segments
@@ -122,12 +135,24 @@ namespace DotNetIO
 			get { return _pathInfo; }
 		}
 
+		/// <summary>
+		/// Join this path with the names of directories
+		/// and files passed as a params array.
+		/// </summary>
+		/// <param name="paths">The names to join this path with.</param>
+		/// <returns></returns>
 		public Path Combine(params string[] paths)
 		{
 			var combinedPath = paths.Aggregate(FullPath, System.IO.Path.Combine);
 			return new Path(combinedPath);
 		}
 
+		/// <summary>
+		/// Combine this path with the other paths passed as
+		/// as a params array.
+		/// </summary>
+		/// <param name="paths">The paths to join this path with</param>
+		/// <returns>A new path instance with the combined paths.</returns>
 		public Path Combine(params Path[] paths)
 		{
 			return Combine(paths.Select(p => p.FullPath).ToArray());

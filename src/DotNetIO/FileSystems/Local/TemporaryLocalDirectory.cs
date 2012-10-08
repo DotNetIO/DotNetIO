@@ -17,15 +17,32 @@ using System.Collections.Generic;
 
 namespace DotNetIO.FileSystems.Local
 {
-	public class TemporaryDirectory : DotNetIO.TemporaryDirectory
+	public class TemporaryLocalDirectory : TemporaryDirectory
 	{
-		public Directory UnderlyingDirectory { get; set; }
-
-		public TemporaryDirectory(Directory unerlyingDirectory)
+		public TemporaryLocalDirectory(Directory backingDirectory)
 		{
-			UnderlyingDirectory = unerlyingDirectory;
+			UnderlyingDirectory = backingDirectory;
+
 			if (!UnderlyingDirectory.Exists())
 				UnderlyingDirectory.Create();
+		}
+
+		~TemporaryLocalDirectory()
+		{
+			Dispose(false);
+		}
+
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		public Directory UnderlyingDirectory { get; set; }
+
+		protected virtual void Dispose(bool disposing)
+		{
+			Delete();
 		}
 
 		public Directory Create()
@@ -117,23 +134,6 @@ namespace DotNetIO.FileSystems.Local
 		{
 			UnderlyingDirectory.MoveTo(item);
 			return item;
-		}
-
-
-		~TemporaryDirectory()
-		{
-			Dispose(false);
-		}
-
-		public void Dispose()
-		{
-			Dispose(true);
-			GC.SuppressFinalize(this);
-		}
-
-		protected virtual void Dispose(bool disposing)
-		{
-			Delete();
 		}
 	}
 }

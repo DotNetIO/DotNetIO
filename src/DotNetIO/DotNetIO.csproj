@@ -77,7 +77,7 @@
     <Compile Include="FileSystems\Local\LocalFileSystem.cs" />
     <Compile Include="FileSystems\Local\LocalFileSystemNotifier.cs" />
     <Compile Include="FileSystems\Local\LocalFileSystemNotifierEntry.cs" />
-    <Compile Include="FileSystems\Local\TemporaryDirectory.cs" />
+    <Compile Include="FileSystems\Local\TemporaryLocalDirectory.cs" />
     <Compile Include="FileSystems\Local\TemporaryLocalFile.cs" />
     <Compile Include="FileSystems\Local\Unix\UnixDirectory.cs" />
     <Compile Include="FileSystems\Local\Unix\UnixFile.cs" />

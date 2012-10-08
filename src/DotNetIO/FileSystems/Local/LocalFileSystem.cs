@@ -93,22 +93,24 @@ namespace DotNetIO.FileSystems.Local
 			return GetDirectory(path).Create();
 		}
 
-		public override DotNetIO.TemporaryDirectory CreateTempDirectory()
+		public override TemporaryDirectory CreateTempDirectory()
 		{
-			Contract.Ensures(Contract.Result<DotNetIO.TemporaryDirectory>() != null);
+			Contract.Ensures(Contract.Result<TemporaryDirectory>() != null);
 
 			var tempPath = Path.GetTempPath();
-			var dirName = Path.GetRandomFileName();
+			var dirName = Path.GetFileNameWithoutExtension(Path.GetRandomFileName());
+			var directory = CreateDirectory(tempPath.Combine(dirName)); // creates dir
 
-			return new TemporaryDirectory(CreateDirectory(tempPath.Combine(dirName)));
+			return new TemporaryLocalDirectory(directory);
 		}
 
 		public override TemporaryFile CreateTempFile()
 		{
 			Contract.Ensures(Contract.Result<TemporaryFile>() != null);
 
-			var randomFilePath = Path.GetTempPath().Combine(Path.GetRandomFileName());
+			var randomFilePath = Path.GetTempFileName(); // creates file
 			var backingFile = GetFile(randomFilePath);
+
 			return new TemporaryLocalFile(backingFile);
 		}
 

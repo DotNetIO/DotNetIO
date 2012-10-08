@@ -18,7 +18,6 @@ using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using DotNetIO.FileSystems.Local.Win32.Interop;
 using DotNetIO.Internal;
 
 namespace DotNetIO.FileSystems.Local
@@ -36,20 +35,11 @@ namespace DotNetIO.FileSystems.Local
 			Path = directoryPath;
 		}
 
-		protected LocalDirectory(string directoryPath)
-			: this(directoryPath.ToPath())
-		{
-			Contract.Requires(directoryPath != null);
-			Contract.Ensures(Path != null);
-		}
-
 		protected abstract LocalDirectory CreateDirectory(Path path);
 
-		public bool Exists()
+		public virtual bool Exists()
 		{
-			WIN32_FIND_DATA findData;
-			using (var handle = NativeMethods.FindFirstFile(Path.FullPath, out findData))
-				return !handle.IsInvalid;
+			return System.IO.Directory.Exists(Path.FullPath);
 		}
 
 		public override string ToString()
@@ -111,6 +101,7 @@ namespace DotNetIO.FileSystems.Local
 
 		static IEnumerable<Directory> DirectoriesRecurse(FileSystem fs, Directory directory, string filter)
 		{
+			// TODO: needs to be replaced with a cross-platform enumeration
 			foreach (var topDir in LongPathDirectory.EnumerateDirectories(directory.Path, filter))
 			{
 				foreach (var subDir in DirectoriesRecurse(fs, fs.GetDirectory(topDir), filter))

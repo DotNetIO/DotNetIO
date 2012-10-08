@@ -18,9 +18,10 @@ using System.IO;
 
 namespace DotNetIO.FileSystems.Local
 {
-	public abstract class LocalFile : File, IEquatable<LocalFile>
+	public abstract class LocalFile 
+		: File, IEquatable<LocalFile>
 	{
-		protected readonly Func<Path, Directory> _directoryFactory;
+		readonly Func<Path, Directory> _directoryFactory;
 
 		public LocalFile(Path filePath, Func<Path, Directory> directoryFactory)
 		{
@@ -122,26 +123,20 @@ namespace DotNetIO.FileSystems.Local
 		public virtual void CopyTo(FileSystemItem item)
 		{
 			var destinationPath = PrepareCopyTo(item);
-			System.IO.File.Copy(Path.FullPath, destinationPath, true);
+			System.IO.File.Copy(Path.FullPath, destinationPath.FullPath, true);
 		}
 
 		// ensure the item exists
-		protected string PrepareCopyTo(FileSystemItem item)
+		protected Path PrepareCopyTo(FileSystemItem item)
 		{
-			string destinationPath;
-
 			if (item is Directory)
 			{
 				((Directory) item).MustExist();
-				destinationPath = item.Path.Combine(Name).FullPath;
+				return item.Path.Combine(Name);
 			}
-			else
-			{
-				item.Parent.MustExist();
-				destinationPath = (item).Path.FullPath;
-			}
-
-			return destinationPath;
+			
+			item.Parent.MustExist();
+			return item.Path;
 		}
 
 		public virtual FileSystemItem MoveTo(FileSystemItem item)

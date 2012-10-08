@@ -13,21 +13,23 @@
 // limitations under the License.
 
 using System.Diagnostics.Contracts;
-using System.IO;
 using DotNetIO.FileSystems.Local.Win32.Interop;
+using DotNetIO.Internal;
 
 namespace DotNetIO.FileSystems.Local.Win32
 {
 	public class Win32Directory : LocalDirectory
 	{
-		public Win32Directory(string directoryPath) : base(directoryPath)
+		public Win32Directory(Path directoryPath) : base(directoryPath)
 		{
 			Contract.Requires(directoryPath != null);
 		}
 
-		public Win32Directory(Path directoryPath) : base(directoryPath)
+		public override bool Exists()
 		{
-			Contract.Requires(directoryPath != null);
+			WIN32_FIND_DATA findData;
+			using (var handle = NativeMethods.FindFirstFile(Path.LongFullPath, out findData))
+				return !handle.IsInvalid;
 		}
 
 		public override void Delete()
@@ -35,7 +37,7 @@ namespace DotNetIO.FileSystems.Local.Win32
 			if (IsHardLink)
 				JunctionPoint.Delete(Path);
 			else
-				base.Delete();
+				LongPathDirectory.Delete(Path, true);
 		}
 
 		public override bool IsHardLink
@@ -46,15 +48,15 @@ namespace DotNetIO.FileSystems.Local.Win32
 		public override Directory LinkTo(Path path)
 		{
 			if (!Exists())
-				throw new IOException("Source path does not exist or is not a directory.");
+				throw new System.IO.IOException("Source path does not exist or is not a directory.");
 
 			JunctionPoint.Create(GetDirectory(path.FullPath), Path.FullPath, true);
-			return new Win32Directory(path.FullPath);
+			return new Win32Directory(path);
 		}
 
 		protected override LocalDirectory CreateDirectory(Path path)
 		{
-			return new Win32Directory(path.FullPath);
+			return new Win32Directory(path);
 		}
 
 		public override Directory GetDirectory(string directoryName)
