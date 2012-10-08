@@ -15,7 +15,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Runtime.Serialization;
 
 namespace DotNetIO
 {
@@ -80,7 +79,8 @@ namespace DotNetIO
 					changeIndex++;
 
 				var newName = string.Format("{0}{1}{2}{3}", nameNoExt.Substring(0, (int) changeIndex), spacer, suffixValue, ext);
-				Contract.Assume(newName.Length <= nameLimit);
+				if (newName.Length > nameLimit)
+					break; // out of names
 
 				if (existing.Contains(newName))
 					continue;
@@ -91,9 +91,9 @@ namespace DotNetIO
 			throw new OutOfNamesException("There are no more names available");
 		}
 
-		internal static IEnumerable<string> CountUp(long start)
+		public static IEnumerable<string> CountUp(long start, string baseAlphabet = "0123456789abcdefghijklmnopqrstuvwxyz")
 		{
-			var suffixChars = "0123456789abcdefghijklmnopqrstuvwxyz".ToCharArray();
+			var suffixChars = baseAlphabet.ToCharArray();
 
 			do
 			{

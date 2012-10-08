@@ -148,7 +148,7 @@ namespace DotNetIO.Internal
 
 		internal static Exception GetExceptionFromWin32Error(int errorCode)
 		{
-			return GetExceptionFromWin32Error(errorCode, "path");
+			return GetExceptionFromWin32Error(errorCode, "errorCode");
 		}
 
 		internal static Exception GetExceptionFromWin32Error(int errorCode, string parameterName)
