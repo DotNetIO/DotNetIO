@@ -34,11 +34,18 @@ namespace DotNetIO
 		}
 
 		/// <summary>
-		/// 
+		/// Given a path 'wanted' that is wanted (i.e. you'd prefer that name), and
+		/// a hash set of existing file *names* (not paths!), and a limit on how
+		/// long you allow file names to be, generate a new name, suffixed
+		/// by '_NUM', where NUM is a base36 number [0-9a-z], and is generated
+		/// *before* the extension. Consume characters from the end of the *name without
+		/// extension* of the file name, towards the start of the file name, if the
+		/// added suffix makes the file name too long. The suffix generator does not generate
+		/// index-zero based, but one-based.
 		/// </summary>
-		/// <param name="wanted"></param>
-		/// <param name="existing"></param>
-		/// <param name="nameLimit"></param>
+		/// <param name="wanted">The path that you want to write to.</param>
+		/// <param name="existing">Existing files in the folder.</param>
+		/// <param name="nameLimit">The file name limit, defaults to NTFS 255 characters</param>
 		/// <exception cref="OutOfNamesException">
 		/// Can't generate more names, because
 		/// there aren't enough characters in the name space allowed by the limit.</exception>
